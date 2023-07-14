@@ -1,13 +1,13 @@
-import './App.css';
+import React from 'react';
+import ChatwootChat from './ChatwootChat';
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        Chatwoot Integration
-      </header>
+    <div>
+      
+      <ChatwootChat />
     </div>
   );
-}
+};
 
 export default App;
