@@ -68,7 +68,7 @@ const ChatwootChat = () => {
         }
 
         socket.send(JSON.stringify(subscription)) // WebSocket üzerinden abonelik mesajını gönderme
-        
+
         setStatus('Send Message:') // Durumu güncelleme
         
       })
@@ -116,7 +116,7 @@ const ChatwootChat = () => {
       }
     }
 
-  }, [contactIdentifier, contactPubsubToken, inboxIdentifier])
+  }, [])
 
 
 
