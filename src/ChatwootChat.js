@@ -52,7 +52,7 @@ const ChatwootChat = () => {
 
     const connectToChatwoot = () => {
 
-      const socket = io('ws://localhost:3000/cable') // Socket.io sunucusuna bağlanma
+      const socket = io('ws://chatwoot-clientapi.netlify.app/cable') // Socket.io sunucusuna bağlanma
       setSocket(socket)
 
       socket.on('connect', () => { // Socket.io bağlantısı başarılı olduğunda çalışacak kodlar
