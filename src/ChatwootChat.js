@@ -51,56 +51,72 @@ const ChatwootChat = () => {
     
 
     const connectToChatwoot = () => {
+      
 
       const socket = io('ws://chatwoot-clientapi.netlify.app/cable') // Socket.io sunucusuna bağlanma
       setSocket(socket)
 
+
       socket.on('connect', () => { // Socket.io bağlantısı başarılı olduğunda çalışacak kodlar
 
-        const subscriptionParams = {
+        //Bu nesne Chatwoot sunucusunda bir abonelik oluşturmak için gereken parametreleri içerir. Abonelik, belirli bir kanala katılmak ve o kanal üzerinden mesaj alışverişi yapmak için kullanılır.
+        const subscriptionParams = { 
           channel: 'RoomChannel',
           pubsub_token: contactPubsubToken,
         }
 
+
+        // Bu nesne WebSocket üzerinden abonelik mesajını temsil eder. command özelliği, abonelik mesajının komutunu belirtir
         const subscription = {
           command: 'subscribe',
           identifier: JSON.stringify(subscriptionParams),
         }
 
-        socket.send(JSON.stringify(subscription)) // WebSocket üzerinden abonelik mesajını gönderme
+
+        //Bu satırda socket nesnesi üzerinden subscription nesnesini JSON formatına dönüştürerek abonelik mesajını Chatwoot sunucusuna gönderir. Bu adım, uygulamamızın belirli bir kanala abone olmasını ve o kanal üzerinden mesaj gönderip almasını sağlar.
+        socket.send(JSON.stringify(subscription)) 
 
         setStatus('Send Message:') // Durumu güncelleme
         
       })
 
 
-      socket.on('message', (message) => {
+      socket.on('message', (message) => { //Bu kısım, socket nesnesinin 'message' olayını dinleyen bir olay dinleyicisidir. Yani Chatwoot sunucusundan gelen mesajları dinleyecek olan kod bloğu
 
-        const json = JSON.parse(message)
+        const serverMessage = JSON.parse(message) //Json formatte gelen server mesajımızı kullanabileceğimiz hale çevirdik.
 
-        if (json.type === 'welcome' || json.type === 'ping' || json.type === 'confirm_subscription') {
+
+        // Gelen bu tür mesajlar, WebSocket bağlantısının doğrulanması ve onaylanması ile ilgili bilgilendirmelerdir ve bir işlem yapmamız gerekmez.
+        if (serverMessage.type === 'welcome' || serverMessage.type === 'ping' || serverMessage.type === 'confirm_subscription') {
 
           return
         } 
 
-        else if (json.message && json.message.event === 'message.created') {
 
-          const { name, content } = json.message.data.sender
+        //Eğer server dan gelen mesaj türü "message.created" ise mesaj gönderme işlemimiz başarılı demektir. Mesajın içeriği "name" (kimin gönderdiği) ve "content" (mesaj içeriği) i alınarak, addMessage fonksiyonum ile content state i güncellenip arayüzde mesajlar gösterilir.
+        else if (serverMessage.message && serverMessage.message.event === 'message.created') {
+
+          const { name, content } = serverMessage.message.data.sender
           addMessage(name, content)
 
         } 
 
+
         else {
-          console.log('Unknown JSON:', json)
+          console.log('Unknown JSON:', serverMessage)
         }
 
       })
 
+
+      //WebSocket bağlantısı sırasında oluşabilecek hataları dinler ve hata durumunda ilgili bilgiyi konsola yazdırır.
       socket.on('error', (error) => {
         console.log('WebSocket connection error:', error)
       })
     }
 
+
+    //Yazmış olduğumuz fonksiyonları sırayla çağırıp çalıştırdık
     setUpContact()
       .then(setUpConversation)
       .then(connectToChatwoot)
