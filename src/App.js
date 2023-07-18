@@ -1,11 +1,11 @@
 import React from 'react';
-import ChatwootChat from './ChatwootChat';
+// import ChatwootChat from './ChatwootChat';
 
 const App = () => {
   return (
     <div>
-      
-      <ChatwootChat />
+      Hello world
+      {/* <ChatwootChat /> */}
     </div>
   );
 };
