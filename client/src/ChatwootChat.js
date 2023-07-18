@@ -53,7 +53,7 @@ const ChatwootChat = () => {
     const connectToChatwoot = () => {
       
 
-      const socket = io('wss://app.chatwoot.com/cable') // Socket.io sunucusuna bağlanma
+      const socket = io('ws://localhost:5000/cable') // Socket.io sunucusuna bağlanma
       setSocket(socket)
 
 
