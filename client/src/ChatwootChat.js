@@ -27,6 +27,14 @@ const ChatwootChat = () => {
 
         setContactIdentifier(response.data.source_id) //Kaynak kimliği ise kullanıcının Chatwoot sunucusunda benzersiz bir tanımlayıcıdır. Bu kimlik, kullanıcının belirli bir sohbeti temsil eder ve sunucu üzerindeki işlemleri bu kimlik aracılığıyla yapabiliriz.
 
+        console.log("CONTACT" + response);
+        console.log(response.data.pubsub_token);
+        console.log(response.data.source_id);
+        console.log("-----------------------");
+        console.log(contactIdentifier);
+        console.log(contactPubsubToken);
+
+        return response //setState ler kendi içlerinde asenkron çalıştığı ve buna müdahale edemediğimiz için responsu döndürdüm
       } catch (error) {
         console.log('Contact setup error:', error)
       }
@@ -34,16 +42,17 @@ const ChatwootChat = () => {
     }
 
 
-    const setUpConversation = async () => { //Kullanıcı sohbet kimliğini alıyoruz
+    const setUpConversation = async (contactResponse) => { //Kullanıcı sohbet kimliğini alıyoruz
 
       try {
-        const response = await axios.post(`https://app.chatwoot.com/public/api/v1/inboxes/${inboxIdentifier}/contacts/${contactIdentifier}/conversations`) //Geriye gerekli bilgileri alabilmek için post atıyoruz
+        const response = await axios.post(`https://app.chatwoot.com/public/api/v1/inboxes/${inboxIdentifier}/contacts/${contactResponse.data.source_id}/conversations`) //Geriye gerekli bilgileri alabilmek için post atıyoruz
 
         setContactConversation(response.data.id) //Sohbet kimliği (contactConversation), Chatwoot platformunda belirli bir müşteri ile yapılan sohbetin benzersiz kimliğidir.
 
-
+        
       } catch (error) {
         console.log('Conversation setup error:', error)
+        console.log(`CONVERSATION-  https://app.chatwoot.com/public/api/v1/inboxes/${inboxIdentifier}/contacts/${contactIdentifier}/conversations`);
       }
 
     }
@@ -116,7 +125,7 @@ const ChatwootChat = () => {
     }
 
 
-    //Yazmış olduğumuz fonksiyonları sırayla çağırıp çalıştırdık
+    //Yazmış olduğumuz fonksiyonları sırayla çağırıp çalıştırdım
     setUpContact()
       .then(setUpConversation)
       .then(connectToChatwoot)
@@ -144,6 +153,8 @@ const ChatwootChat = () => {
 
   const sendMessage = () => {
 
+    // console.log(`MESSAGE - ${contactIdentifier} // ${contactConversation}`); state içerikleri güncel ulaşıyor
+    
     if (!inputValue) {
       return
     }
@@ -158,7 +169,6 @@ const ChatwootChat = () => {
       })
 
       .catch((error) => {
-        
         console.log('Message sending error:', error)
       })
 
