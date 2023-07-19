@@ -1,17 +1,16 @@
 import  express  from 'express'
 import  { createProxyMiddleware }  from 'http-proxy-middleware'
-
+import cors from 'cors'
 
 const app = express()
 
-// Hedef URL Chatwoot sunucusunun WebSocket bağlantısı için kullanılan adres
 const target = 'wss://app.chatwoot.com/cable'
 
 
 // WebSocket proxy
 app.use('/cable', createProxyMiddleware({ target, ws: true, changeOrigin: true }))
 
-
+app.use(cors())
 
 const buildPath = 'C:/Users/can.tas/Desktop/chatwoot-demo/client/build'
 
@@ -22,16 +21,14 @@ app.use(express.static('build'))
 
 
 
-// Bir istemci tarafından sunucuya gönderilen herhangi bir talep, bu işleyici tarafından yakalanır ve res.sendFile() yöntemi ile React uygulamasının ana sayfası (index.html) istemciye gönderilir.
+// Bir istemci tarafından sunucuya gönderilen herhangi bir talep bu işleyici tarafından yakalanır ve res.sendFile() yöntemi ile React uygulamasının ana sayfası (index.html) istemciye gönderilir.
 app.get('*', (req, res) => {
     res.sendFile(buildPath + '/index.html')
 })
 
 
+const port = 5000
 
-// Sunucuyu belirtilen portta başlatma
-const port = 5000;
 app.listen(port, () => {
   console.log(`Proxy server is running on port ${port}`)
-  console.log("ALOOO" + buildPath)
 })
