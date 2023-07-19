@@ -11,7 +11,7 @@ const ChatwootChat = () => {
   const [inputValue, setInputValue] = useState('') // Kullanıcının girdiği metin değeri için kullanılan state
   const [status, setStatus] = useState('Send Message:') // Sohbet durumunu temsil eden state
   const [socket, setSocket] = useState(null) // Socket.io bağlantısını temsil eden state
-  const inboxIdentifier = 'VHSzin56Hodyxx9B8VuDZiu2' // Chatwoot sunucusundaki gelen kutusu kimliği
+  const inboxIdentifier = 'c1Qm2t1oPjaAAYgzC5vvET7B' // Chatwoot sunucusundaki gelen kutusu kimliği
   const [contactIdentifier, setContactIdentifier] = useState('') // Kullanıcının kimliği
   const [contactPubsubToken, setContactPubsubToken] = useState('') // Kullanıcının pubsub token'ı
   const [contactConversation, setContactConversation] = useState('') // Kullanıcının sohbet kimliği
