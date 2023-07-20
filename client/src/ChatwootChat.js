@@ -90,21 +90,22 @@ const ChatwootChat = () => {
       })
 
 
-      socket.on('message', (message) => { //Bu kısım, socket nesnesinin 'message' olayını dinleyen bir olay dinleyicisidir. Yani Chatwoot sunucusundan gelen mesajları dinleyecek olan kod bloğu
+      socket.on("message", (message) => { //Bu kısım, socket nesnesinin 'message' olayını dinleyen bir olay dinleyicisidir. Yani Chatwoot sunucusundan gelen mesajları dinleyecek olan kod bloğu
 
         const serverMessage = JSON.parse(message) //Json formatte gelen server mesajımızı kullanabileceğimiz hale çevirdik.
-
+        console.log(message.data);
+        console.log(...serverMessage);
 
         // Gelen bu tür mesajlar, WebSocket bağlantısının doğrulanması ve onaylanması ile ilgili bilgilendirmelerdir ve bir işlem yapmamız gerekmez.
         if (serverMessage.type === 'welcome' || serverMessage.type === 'ping' || serverMessage.type === 'confirm_subscription') {
-
+          console.log("başladı");
           return
         } 
 
 
         //Eğer server dan gelen mesaj türü "message.created" ise mesaj gönderme işlemimiz başarılı demektir. Mesajın içeriği "name" (kimin gönderdiği) ve "content" (mesaj içeriği) i alınarak, addMessage fonksiyonum ile content state i güncellenip arayüzde mesajlar gösterilir.
         else if (serverMessage.message && serverMessage.message.event === 'message.created') {
-
+          console.log(`SERVER MSG ALOO 1 : ${serverMessage.message} // ${serverMessage.message.event}`);
           const { name, content } = serverMessage.message.data.sender
           addMessage(name, content)
 
@@ -113,14 +114,16 @@ const ChatwootChat = () => {
 
         else {
           console.log('Unknown JSON:', serverMessage)
+          console.log(`SERVER MSG ALOO 2 : ${serverMessage.message} // ${serverMessage.message.event}`);
         }
-
+        console.log(`SERVER MSG ALOO 3 : ${serverMessage.message} // ${serverMessage.message.event}`);
       })
 
 
       //WebSocket bağlantısı sırasında oluşabilecek hataları dinler ve hata durumunda ilgili bilgiyi konsola yazdırır.
       socket.on('error', (error) => {
         console.log('WebSocket connection error:', error)
+
       })
     }
 
